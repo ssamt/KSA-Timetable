@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <style>
+        .container p, form, input {
+            text-align: center;
+        }
+    </style>
+    {% block style %}{% endblock %}
+    <meta charset="UTF-8">
+    <title>KSA 시간표</title>
+</head>
+<body>
+    <div class="container">
+        <p>KSA 시간표 생성기</p>
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

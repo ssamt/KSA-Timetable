@@ -1,0 +1,14 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <form method="post">
+    {% csrf_token %}
+    {{ form.lecture_data.label }} <br>
+    {{ form.lecture_data }} <br>
+    <br>
+    {{ form.links.label }} <br>
+    {{ form.links }} <br>
+    <br>
+    <input type="submit" value="다운로드">
+    </form>
+{% endblock %}
