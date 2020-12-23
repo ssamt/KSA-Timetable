@@ -1,7 +1,8 @@
 from django import forms
 
 
-raw_data_example = '''1 	수리정보과학부 	자연계열교과핵심 	수학2 	4 	1 	정명주 	월3|월4|화2|수1|목5 	3 	18 	15
+raw_data_example = '''예시
+1 	수리정보과학부 	자연계열교과핵심 	수학2 	4 	1 	정명주 	월3|월4|화2|수1|목5 	3 	18 	15
 2 	화학생물학부 	자연계열교과핵심 	생물학및실험2 	3 	1 	권창섭 	월5|수2|목1 	6 	18 	16
 3 	인문예술학부 	인문계열교과핵심 	한국사의이해 	3 	1 	강재순 	월6|목2|금1 	3 	18 	15
 4 	인문예술학부 	인문계열교과핵심 	미술 	2 	1 	박주영 	화6|화7 	2 	18 	17
@@ -17,7 +18,7 @@ class RawForm(forms.Form):
                                label='',
                                help_text='''<br><a href="https://students.ksa.hs.kr/" target="_blank">https://students.ksa.hs.kr/</a>
                                 > 수강정보 > 수강신청현황<br>
-                                수강신청과목 표 복사해서 붙여넣기(머리글 행 제외)<br>''')
+                                수강신청과목 표를 붙여넣으면 됨(머리글 행 제외)<br>''')
 
 
 class DataForm(forms.Form):
