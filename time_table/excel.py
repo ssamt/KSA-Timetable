@@ -58,7 +58,9 @@ def raw_to_str(data):
 class Lecture:
     # gets a line from raw_to_str
     def __init__(self, data):
-        data = data.split(', ')
+        data = data.split(',')
+        for i in range(len(data)):
+            data[i] = data[i].strip()
         data[TIME_S] = data[TIME_S].split('/')
         for i in range(len(data[TIME_S])):
             data[TIME_S][i] = [days.index(data[TIME_S][i][0]), int(data[TIME_S][i][1:])]
@@ -108,7 +110,9 @@ class Table:
         data = data.splitlines()
         for i in range(len(data)):
             self.lec.append(Lecture(data[i]))
-        self.link = link.split(', ')
+        self.link = link.split(',')
+        for i in range(len(self.link)):
+            self.link[i] = self.link[i].strip()
 
     def __str__(self):
         return '\n'.join(map(str, self.lec))
