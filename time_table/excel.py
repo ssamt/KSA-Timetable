@@ -42,9 +42,12 @@ def raw_to_str(data):
     data = data.strip()
     data = data.splitlines()
     for i in range(len(data)):
-        data[i] = data[i].split('\t')
+        data[i] = data[i].replace('\t', '  ')  # two spaces
+        data[i] = data[i].split('  ')
+        data[i] = list(filter(None, data[i]))
         for j in range(len(data[i])):
             data[i][j] = data[i][j].strip()
+        print(data[i])
         data[i][TIME_R] = data[i][TIME_R].split('|')
         data[i][TIME_R] = '/'.join(data[i][TIME_R])
         data[i][CLASS_NUM_R] += '반'
