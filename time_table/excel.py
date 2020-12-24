@@ -101,6 +101,13 @@ def link_formula(cells):
     return string
 
 
+def apply_basic_format(format):
+    format.set_text_wrap()
+    format.set_align('center')
+    format.set_align('vcenter')
+    format.set_border(1)
+
+
 class Table:
     # gets data in raw_to_str output format
     # gets links in string separated by comma
@@ -123,30 +130,38 @@ class Table:
         workbook = xlsxwriter.Workbook(output)
         table = workbook.add_worksheet('시간표')
         table_format = workbook.add_format()  # format for all cells in timetable
-        table_format.set_text_wrap()
-        table_format.set_align('center')
-        table_format.set_align('vcenter')
-        table_format.set_border(1)
+        apply_basic_format(table_format)
         # format for period cells, for each lecture
         period_format = [workbook.add_format() for i in range(len(self.lec))]
         for i in range(min(len(self.lec), len(colors))):
             period_format[i].set_bg_color(colors[i])
         for i in range(len(self.lec)):
-            period_format[i].set_text_wrap()
-            period_format[i].set_align('center')
-            period_format[i].set_align('vcenter')
-            period_format[i].set_border(1)
+            apply_basic_format(period_format[i])
+
+        # format for three cells in the example period
+        example_period_format = [workbook.add_format() for i in range(3)]
+        for i in range(len(example_period_format)):
+            apply_basic_format(example_period_format[i])
+            example_period_format[i].set_bg_color(colors[0])
+        example_period_format[0].set_bottom(0)
+        example_period_format[1].set_top(0)
+        example_period_format[1].set_bottom(0)
+        example_period_format[2].set_top(0)
+
+        example_link_format = workbook.add_format()
+        apply_basic_format(example_link_format)
+        example_link_format.set_bg_color(colors[0])
+        example_link_format.set_color('blue')
+        example_link_format.set_underline()
+
         # format for link cells, for each lecture
         link_format = [workbook.add_format() for i in range(len(self.lec))]
         for i in range(min(len(self.lec), len(colors))):
             link_format[i].set_bg_color(colors[i])
         for i in range(len(self.lec)):
-            link_format[i].set_text_wrap()
-            link_format[i].set_align('center')
-            link_format[i].set_align('vcenter')
+            apply_basic_format(link_format[i])
             link_format[i].set_color('blue')
             link_format[i].set_underline()
-            link_format[i].set_border(1)
 
         # set column and row size, merge cells
         table.set_column(0, 0, 15)
@@ -162,7 +177,7 @@ class Table:
             table.set_row(i, 40)
             table.merge_range(i, 0, i, 2+len(days)-1, '')
 
-        # applying basic format to all cells
+        # applying basic format to all cells in 시간표
         for i in range(2*(len(class_time)-1)+len(meals)+1):
             for j in range(len(days)+2):
                 table.write(i, j, '', table_format)
@@ -186,6 +201,12 @@ class Table:
 
         # create 데이터 worksheet
         data = workbook.add_worksheet('데이터')
+        example_text = ['교과명', '교원', '교실']
+        example_row = len(self.lec)+1
+        example_column = 4+len(self.link)
+        data.set_column(example_column, example_column, 15)
+        for i in range(4):
+            data.set_row(example_row+i, 20)
         data.write(0, NAME_X, ugettext('교과명'))
         data.write(0, CLASSROOM_X, ugettext('교실'))
         data.write(0, CLASS_NUM_X, ugettext('분반'))
@@ -196,6 +217,15 @@ class Table:
             data.write(i+1, NAME_X, ugettext(self.lec[i].name))
             data.write(i+1, CLASS_NUM_X, ugettext(self.lec[i].class_num))
             data.write(i+1, TEACHER_X, ugettext(self.lec[i].teacher))
+        for i in range(3):
+            data.write(example_row+i, example_column, ugettext(example_text[i]), example_period_format[i])
+        data.write(example_row+3, example_column, ugettext('Link'), example_link_format)
+        data.write(example_row, example_column+1, ugettext('이 워크시트의 데이터로 시간표가 만들어짐'))
+        data.write(example_row+2, example_column+1, ugettext('<- 왼쪽 표에 교실 입력하면 자동으로 생성됨'))
+        data.write(example_row+3, example_column+1, ugettext(f'<- {", ".join(self.link)} 밑에 링크를 입력하면 생성됨'))
+        data.write(example_row+4, example_column+1, ugettext('링크'))
+        data.write(example_row+4, example_column+2, ugettext('https://ksatimetable.herokuapp.com'))
+        data.write(example_row+5, example_column+1, ugettext('버그, 문의사항 등은 20-017 김병권'))
         workbook.close()
         excel_data = output.getvalue()
         return excel_data

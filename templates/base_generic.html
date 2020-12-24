@@ -2,6 +2,10 @@
 <html lang="ko">
 <head>
     <style>
+        .title {
+            font-weight: bold;
+            font-size: large;
+        }
         .container p, form, input {
             text-align: center;
         }
@@ -12,7 +16,9 @@
 </head>
 <body>
     <div class="container">
-        <p>KSA 시간표 생성기</p>
+        <div class="title">
+            <p>KSA 시간표 생성기</p>
+        </div>
         {% block content %}{% endblock %}
     </div>
 </body>
