@@ -29,6 +29,9 @@ def home_view(request):
                 data_form = DataForm({'lecture_data': lecture_str, 'links': default_links})
                 context = {'form': data_form}
                 return render(request, 'data_input.html', context=context)
+            else:
+                context = {'form': raw_form}
+                return render(request, 'raw_input.html', context=context)
         elif 'lecture_data' in request.POST:
             data_form = DataForm(request.POST)
             if data_form.is_valid():
@@ -39,3 +42,6 @@ def home_view(request):
                 excel_data = table.get_excel()
                 response.write(excel_data)
                 return response
+            else:
+                context = {'form': data_form}
+                return render(request, 'data_input.html', context=context)

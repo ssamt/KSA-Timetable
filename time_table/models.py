@@ -1,3 +1,11 @@
 from django.db import models
 
-# Create your models here.
+
+'''class RawData(models.Model):
+    data = models.CharField()
+
+
+class ExcelData(models.Model):
+    lecture_data = models.CharField()
+    links = models.CharField()
+'''

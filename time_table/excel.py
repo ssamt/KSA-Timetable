@@ -3,7 +3,9 @@ import xlsxwriter
 from django.utils.translation import ugettext
 
 
+RAW_LEN = 11
 NAME_R, TEACHER_R, TIME_R, CLASS_NUM_R = 3, 6, 7, 8  # index in raw string
+LECTURE_LEN = 4
 NAME_S, TEACHER_S, TIME_S, CLASS_NUM_S = 0, 1, 2, 3  # index in readable string
 NAME_X, CLASSROOM_X, CLASS_NUM_X, TEACHER_X = 0, 1, 2, 3  # index in excel data sheet
 LINK_START_COLUMN = 4
@@ -64,7 +66,8 @@ class Lecture:
         data[TIME_S] = data[TIME_S].split('/')
         for i in range(len(data[TIME_S])):
             data[TIME_S][i] = [days.index(data[TIME_S][i][0]), int(data[TIME_S][i][1:])]
-        data[CLASS_NUM_S] = data[CLASS_NUM_S][:-1]
+        if not data[CLASS_NUM_S].isdigit():  # '반' 제거
+            data[CLASS_NUM_S] = data[CLASS_NUM_S][:-1]
         self.name = data[NAME_S]
         self.teacher = data[TEACHER_S]
         self.time = data[TIME_S]
