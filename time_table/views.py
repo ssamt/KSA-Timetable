@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .excel import Table, raw_to_str
 from .forms import RawForm, DataForm
+from .models import RawData, ExcelData
 
 
 raw = '''1 	수리정보과학부 	자연계열교과핵심 	수학2 	4 	1 	정명주 	월3|월4|화2|수1|목5 	3 	18 	15
@@ -25,17 +26,23 @@ def home_view(request):
             raw_form = RawForm(request.POST)
             if raw_form.is_valid():
                 data = raw_form.cleaned_data
+                save_model = RawData(data=data['raw_data'], is_valid=True)
+                save_model.save()
                 lecture_str = raw_to_str(data['raw_data'])
                 data_form = DataForm({'lecture_data': lecture_str, 'links': default_links})
                 context = {'form': data_form}
                 return render(request, 'data_input.html', context=context)
             else:
-                context = {'form': raw_form}
+                save_model = RawData(data=request.POST.get('raw_data'), is_valid=False)
+                save_model.save()
+                context = {'form': raw_form, 'id': save_model.id}
                 return render(request, 'raw_input.html', context=context)
         elif 'lecture_data' in request.POST:
             data_form = DataForm(request.POST)
             if data_form.is_valid():
                 data = data_form.cleaned_data
+                save_model = ExcelData(lecture_data=data['lecture_data'], links=data['links'], is_valid=True)
+                save_model.save()
                 response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
                 response['Content-Disposition'] = 'attachment; filename=timetable.xlsx'
                 table = Table(data['lecture_data'], data['links'])
@@ -43,5 +50,8 @@ def home_view(request):
                 response.write(excel_data)
                 return response
             else:
-                context = {'form': data_form}
+                save_model = ExcelData(lecture_data=request.POST.get('lecture_data'), links=request.POST.get('links'),
+                          is_valid=False)
+                save_model.save()
+                context = {'form': data_form, 'id': save_model.id}
                 return render(request, 'data_input.html', context=context)

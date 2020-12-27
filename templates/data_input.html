@@ -3,6 +3,9 @@
 {% block content %}
     <form method="post">
     {% csrf_token %}
+    {% if id %}
+        <p>ID: {{ id }}</p>
+    {% endif %} added
     {{ form.lecture_data.errors }}
     {{ form.lecture_data.label }} <br>
     {{ form.lecture_data }} <br>

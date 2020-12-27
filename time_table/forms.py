@@ -27,18 +27,30 @@ lecture_data_example = '''예시
 
 
 raw_error_message = [
-    '예시와 형식이 같은지 확인해주세요.',
+    '{row}번째 줄이 형식에 맞지 않습니다. 예시와 형식이 같은지 확인해주세요.',
     f'예시: {raw_data_short_example}',
     '주의: 각 항목은 2개 이상의 공백이나 탭으로 구분되어 있어야 합니다.',
-    '해결이 되지 않는다면 20-017 김병권에게 연락해주세요.',
+    '해결이 되지 않는다면 ID를 가지고 20-017 김병권에게 연락해주세요.',
 ]
-raw_validation_error = [ValidationError(message) for message in raw_error_message]
+
+
+def raw_error(row):
+    errors = raw_error_message.copy()
+    errors[0] = errors[0].format(row=row)
+    return ValidationError([ValidationError(message) for message in errors])
+
 
 lecture_error_message = [
+    '{row}번째 줄이 형식에 맞지 않습니다.',
     '"교과명, 교원, 수업 시간, 분반" 형식인지 확인해 주세요.',
-    '해결이 되지 않는다면 20-017 김병권에게 연락해주세요.',
+    '해결이 되지 않는다면 ID를 가지고 20-017 김병권에게 연락해주세요.',
 ]
-lecture_validation_error = [ValidationError(message) for message in lecture_error_message]
+
+
+def lecture_error(row):
+    errors = lecture_error_message.copy()
+    errors[0] = errors[0].format(row=row)
+    return ValidationError([ValidationError(message) for message in errors])
 
 
 class RawForm(forms.Form):
@@ -58,15 +70,15 @@ class RawForm(forms.Form):
             data[i] = data[i].split('  ')
             data[i] = list(filter(None, data[i]))
             if len(data[i]) != RAW_LEN:
-                raise ValidationError([ValidationError(f'{i+1}번째 줄이 형식에 맞지 않습니다.')] + raw_validation_error)
+                raise raw_error(i+1)
             for j in range(len(data[i])):
                 data[i][j] = data[i][j].strip()
             data[i][TIME_R] = data[i][TIME_R].split('|')
             for j in range(len(data[i][TIME_R])):
                 if data[i][TIME_R][j][0] not in days or (not data[i][TIME_R][j][1:].isdigit()):
-                    raise ValidationError([ValidationError(f'{i+1}번째 줄이 형식에 맞지 않습니다.')] + raw_validation_error)
+                    raise raw_error(i+1)
             if not data[i][CLASS_NUM_R].isdigit():
-                raise ValidationError([ValidationError(f'{i+1}번째 줄이 형식에 맞지 않습니다.')] + raw_validation_error)
+                raise raw_error(i+1)
         return cleaned_data.get('raw_data')
 
 
@@ -83,13 +95,13 @@ class DataForm(forms.Form):
         for i in range(len(data)):
             data[i] = data[i].split(',')
             if len(data[i]) != LECTURE_LEN:
-                raise ValidationError([ValidationError(f'{i+1}번째 줄이 형식에 맞지 않습니다.')] + lecture_validation_error)
+                raise lecture_error(i+1)
             for j in range(len(data[i])):
                 data[i][j] = data[i][j].strip()
             data[i][TIME_S] = data[i][TIME_S].split('/')
             for j in range(len(data[i][TIME_S])):
                 if not (data[i][TIME_S][j][0] in days and data[i][TIME_S][j][1:].isdigit()):
-                    raise ValidationError([ValidationError(f'{i+1}번째 줄이 형식에 맞지 않습니다.')] + lecture_validation_error)
+                    raise lecture_error(i+1)
             if not (data[i][CLASS_NUM_S].isdigit() or data[i][CLASS_NUM_S][:-1].isdigit()):
-                raise ValidationError([ValidationError(f'{i+1}번째 줄이 형식에 맞지 않습니다.')] + lecture_validation_error)
+                raise lecture_error(i+1)
         return clean_data.get('lecture_data')
