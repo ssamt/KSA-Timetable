@@ -10,11 +10,33 @@
     {{ form.lecture_data.label }} <br>
     {{ form.lecture_data }} <br>
     <br>
-    {{ form.links.label }} <br>
-    {{ form.links }} <br>
+    {{ form.use_link.label }} {{ form.use_link }} <br>
     <br>
-    <span>같은 형식으로 수업 데이터를 추가할 수 있습니다.</span><br>
+    <div id="link">
+        {{ form.links.label }} <br>
+        {{ form.links }} <br>
+        <br>
+    </div>
+    <span id="test">같은 형식으로 수업 데이터를 추가할 수 있습니다.</span><br>
     <span>변경할 것이 없으면 그대로 다운로드하면 됩니다.</span><br>
     <input type="submit" value="다운로드">
     </form>
+
+    <script>
+    document.getElementById("id_use_link").onchange = showHideLinks
+    function showHideLinks()
+    {
+        const use_link = document.getElementById("id_use_link").checked;
+        const links = document.getElementById("link");
+        console.log("use_link" + use_link + links)
+        if (document.getElementById("id_use_link").checked)
+        {
+            links.style.display = "block";
+        }
+        else
+        {
+            links.style.display = "none";
+        }
+    }
+    </script>
 {% endblock %}

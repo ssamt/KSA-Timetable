@@ -86,6 +86,7 @@ class DataForm(forms.Form):
     lecture_data = forms.CharField(widget=forms.Textarea(attrs={'placeholder': lecture_data_example,
                                                                 'rows': 15, 'cols': 50}),
                                    label='수업 정보')
+    use_link = forms.BooleanField(label='온라인 수업', required=False)
     links = forms.CharField(widget=forms.TextInput(attrs={'size': 50}), label='온라인 수업 링크')
 
     def clean_lecture_data(self):

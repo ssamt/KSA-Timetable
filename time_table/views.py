@@ -29,7 +29,7 @@ def home_view(request):
                 save_model = RawData(data=data['raw_data'], is_valid=True)
                 save_model.save()
                 lecture_str = raw_to_str(data['raw_data'])
-                data_form = DataForm({'lecture_data': lecture_str, 'links': default_links})
+                data_form = DataForm({'lecture_data': lecture_str, 'use_link': True, 'links': default_links})
                 context = {'form': data_form}
                 return render(request, 'data_input.html', context=context)
             else:
@@ -41,17 +41,19 @@ def home_view(request):
             data_form = DataForm(request.POST)
             if data_form.is_valid():
                 data = data_form.cleaned_data
-                save_model = ExcelData(lecture_data=data['lecture_data'], links=data['links'], is_valid=True)
+                save_model = ExcelData(lecture_data=data['lecture_data'], use_link=data['use_link'],
+                                       links=data['links'], is_valid=True)
                 save_model.save()
                 response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
                 response['Content-Disposition'] = 'attachment; filename=timetable.xlsx'
-                table = Table(data['lecture_data'], data['links'])
+                table = Table(data['lecture_data'], data['use_link'], data['links'])
                 excel_data = table.get_excel()
                 response.write(excel_data)
                 return response
             else:
-                save_model = ExcelData(lecture_data=request.POST.get('lecture_data'), links=request.POST.get('links'),
-                          is_valid=False)
+                save_model = ExcelData(lecture_data=request.POST.get('lecture_data'),
+                                       use_link=request.POST.get('use_link'),
+                                       links=request.POST.get('links'), is_valid=False)
                 save_model.save()
                 context = {'form': data_form, 'id': save_model.id}
                 return render(request, 'data_input.html', context=context)

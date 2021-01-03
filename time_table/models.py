@@ -9,6 +9,7 @@ class RawData(models.Model):
 
 class ExcelData(models.Model):
     lecture_data = models.TextField(max_length=750)
+    use_link = models.BooleanField(default=True)
     links = models.CharField(max_length=100)
     is_valid = models.BooleanField(default=True)
     id = models.AutoField(primary_key=True)
