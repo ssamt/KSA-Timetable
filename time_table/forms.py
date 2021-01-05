@@ -58,7 +58,7 @@ class RawForm(forms.Form):
                                label='',
                                help_text='''<br><a href="https://students.ksa.hs.kr/" target="_blank">https://students.ksa.hs.kr/</a>
                                 > 수강정보 > 수강신청현황<br>
-                                수강신청과목 표를 붙여넣으면 됩니다.(머리글 행 제외)<br>''')
+                                본인의 수강신청과목 표를 붙여넣으면 됩니다.(머리글 행 제외)<br>''')
 
     def clean_raw_data(self):
         cleaned_data = self.cleaned_data

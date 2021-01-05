@@ -263,7 +263,7 @@ class Table:
         for i in range(3):
             data.write(example_row+i, example_column, ugettext(example_text[i]), example_period_format[i])
         data.write(example_row, example_column+1, ugettext('이 워크시트의 데이터로 시간표가 만들어짐'), vcenter_format)
-        data.write(example_row+2, example_column+1, ugettext('<- 왼쪽 표에 교실 입력하면 자동으로 생성됨'), vcenter_format)
+        data.write(example_row+2, example_column+1, ugettext('<- 왼쪽 표에 교실을 입력하면 자동으로 생성됨'), vcenter_format)
         if self.use_link:
             data.write(example_row+3, example_column, ugettext('Link'), example_link_format)
             data.write(example_row+3, example_column+1, ugettext(f'<- {", ".join(self.link)} 밑에 링크를 입력하면 생성됨'),
@@ -272,8 +272,7 @@ class Table:
             start_row = example_row+4
         else:
             start_row = example_row+3
-        data.write(start_row, example_column+1, ugettext('링크'))
-        data.write(start_row, example_column+2, ugettext('https://ksatimetable.herokuapp.com'))
+        data.write(start_row, example_column+1, ugettext('https://ksatimetable.herokuapp.com'))
         data.write(start_row+1, example_column+1, ugettext('버그, 문의사항 등은 20-017 김병권'))
         workbook.close()
         excel_data = output.getvalue()

@@ -51,9 +51,12 @@ def home_view(request):
                 response.write(excel_data)
                 return response
             else:
+                if request.POST.get('use_link'):
+                    use_link = True
+                else:
+                    use_link = False
                 save_model = ExcelData(lecture_data=request.POST.get('lecture_data'),
-                                       use_link=request.POST.get('use_link'),
-                                       links=request.POST.get('links'), is_valid=False)
+                                       use_link=use_link, links=request.POST.get('links'), is_valid=False)
                 save_model.save()
                 context = {'form': data_form, 'id': save_model.id}
                 return render(request, 'data_input.html', context=context)
