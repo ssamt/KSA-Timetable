@@ -1,12 +1,23 @@
 {% extends 'base_generic.html' %}
 
+{% block style %}
+    <style>
+        .submit {
+            background-color: saddlebrown;
+        }
+        .submit:hover {
+            background-color: #Ab6533;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
     <form method="post">
     {% csrf_token %}
-    {% if id %}
-        <p>ID: {{ id }}</p>
+    {% if key %}
+        <p>key: {{ key }}</p>
     {% endif %}
     {{ form.as_p }}
-    <input type="submit" value="데이터 처리">
+    <input type="submit" value="데이터 처리" class="submit">
     </form>
 {% endblock %}

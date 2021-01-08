@@ -123,7 +123,7 @@ def apply_basic_format(format):
 class Table:
     # gets data in raw_to_str output format
     # gets links in string separated by comma
-    def __init__(self, data, use_link, link):
+    def __init__(self, data, use_link, link, key):
         self.lec = []
         data = data.strip()
         data = data.splitlines()
@@ -133,6 +133,7 @@ class Table:
         self.link = link.split(',')
         for i in range(len(self.link)):
             self.link[i] = self.link[i].strip()
+        self.key = key
 
     def __str__(self):
         return '\n'.join(map(str, self.lec))
@@ -274,6 +275,7 @@ class Table:
             start_row = example_row+3
         data.write(start_row, example_column+1, ugettext('https://ksatimetable.herokuapp.com'))
         data.write(start_row+1, example_column+1, ugettext('버그, 문의사항 등은 20-017 김병권'))
+        data.write(start_row+2, example_column+1, ugettext(f'key: {self.key}'))
         workbook.close()
         excel_data = output.getvalue()
         return excel_data

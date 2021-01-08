@@ -35,7 +35,7 @@ def home_view(request):
             else:
                 save_model = RawData(data=request.POST.get('raw_data'), is_valid=False)
                 save_model.save()
-                context = {'form': raw_form, 'id': save_model.id}
+                context = {'form': raw_form, 'key': save_model.key}
                 return render(request, 'raw_input.html', context=context)
         elif 'lecture_data' in request.POST:
             data_form = DataForm(request.POST)
@@ -46,7 +46,7 @@ def home_view(request):
                 save_model.save()
                 response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
                 response['Content-Disposition'] = 'attachment; filename=timetable.xlsx'
-                table = Table(data['lecture_data'], data['use_link'], data['links'])
+                table = Table(data['lecture_data'], data['use_link'], data['links'], save_model.key)
                 excel_data = table.get_excel()
                 response.write(excel_data)
                 return response
@@ -58,5 +58,5 @@ def home_view(request):
                 save_model = ExcelData(lecture_data=request.POST.get('lecture_data'),
                                        use_link=use_link, links=request.POST.get('links'), is_valid=False)
                 save_model.save()
-                context = {'form': data_form, 'id': save_model.id}
+                context = {'form': data_form, 'key': save_model.key}
                 return render(request, 'data_input.html', context=context)

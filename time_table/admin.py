@@ -5,14 +5,14 @@ from django.contrib.auth.models import User, Group
 
 @admin.register(RawData)
 class RawDataAdmin(admin.ModelAdmin):
-    list_display = ('id', 'is_valid')
-    readonly_fields = ('id',)
+    list_display = ('key', 'is_valid')
+    readonly_fields = ('key',)
 
 
 @admin.register(ExcelData)
 class ExcelDataAdmin(admin.ModelAdmin):
-    list_display = ('id', 'is_valid')
-    readonly_fields = ('id',)
+    list_display = ('key', 'is_valid')
+    readonly_fields = ('key',)
 
 
 admin.site.unregister(User)
