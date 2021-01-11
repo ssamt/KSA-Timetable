@@ -2,8 +2,11 @@
 <html lang="ko">
 <head>
     <style>
-        textarea {
+        .container {
             width: 90%;
+        }
+        textarea {
+            width: 100%;
             height: 200px;
             border: 1px solid;
             border-radius: 10px;
@@ -28,6 +31,9 @@
             font-weight: bold;
             font-size: large;
         }
+        .external-link {
+            text-align: right;
+        }
     </style>
     {% block style %}{% endblock %}
     <meta charset="UTF-8">
@@ -36,9 +42,11 @@
 <body>
     <div class="container">
         <div class="title">
-            <p>KSA 시간표 생성기</p>
+            <p>KSA 시간표 엑셀 변환기</p>
         </div>
         {% block content %}{% endblock %}
+        <br>
+        <a href="https://github.com/ssamt/KSA-Timetable" target="_blank">Github</a>
     </div>
 </body>
 </html>

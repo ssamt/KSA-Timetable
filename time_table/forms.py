@@ -44,8 +44,8 @@ def lecture_error(row):
 class RawForm(forms.Form):
     raw_data = forms.CharField(widget=forms.Textarea(attrs={'placeholder': raw_data_example, 'rows': 15, 'cols': 150}),
                                label='',
-                               help_text='''<br><br>
-                               <a href="https://students.ksa.hs.kr/" target="_blank">https://students.ksa.hs.kr/</a>
+                               help_text='''<br>
+                                <a href="https://students.ksa.hs.kr/" target="_blank">https://students.ksa.hs.kr/</a>
                                 > 수강정보 > 수강신청현황<br>
                                 본인의 수강신청과목 표를 붙여넣으면 됩니다.(머리글 행 제외)<br>''')
 
