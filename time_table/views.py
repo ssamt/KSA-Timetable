@@ -29,7 +29,8 @@ def home_view(request):
                 save_model = RawData(data=data['raw_data'], is_valid=True)
                 save_model.save()
                 lecture_str = raw_to_str(data['raw_data'])
-                data_form = DataForm({'lecture_data': lecture_str, 'use_link': True, 'links': default_links})
+                data_form = DataForm({'lecture_data': lecture_str, 'use_link': False, 'include_aa': False,
+                                      'links': default_links})
                 context = {'form': data_form}
                 return render(request, 'data_input.html', context=context)
             else:
@@ -42,11 +43,12 @@ def home_view(request):
             if data_form.is_valid():
                 data = data_form.cleaned_data
                 save_model = ExcelData(lecture_data=data['lecture_data'], use_link=data['use_link'],
-                                       links=data['links'], is_valid=True)
+                                       include_aa=data['include_aa'], links=data['links'], is_valid=True)
                 save_model.save()
                 response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
                 response['Content-Disposition'] = 'attachment; filename=timetable.xlsx'
-                table = Table(data['lecture_data'], data['use_link'], data['links'], save_model.key)
+                table = Table(data['lecture_data'], data['use_link'], data['include_aa'], data['links'],
+                              save_model.key)
                 excel_data = table.get_excel()
                 response.write(excel_data)
                 return response
