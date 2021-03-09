@@ -52,7 +52,7 @@ def dec_sat(color, factor):
 
 
 for i in range(len(colors)):
-    colors[i] = dec_sat(colors[i], 0.83)
+    colors[i] = dec_sat(colors[i], 0.5)
 
 
 def has_meal(period):
