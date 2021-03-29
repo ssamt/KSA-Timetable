@@ -46,7 +46,6 @@ def rgb_to_hex(red, green, blue):
 def dec_sat(color, factor):
     hsv = list(colorsys.rgb_to_hsv(*hex_to_rgb(color)))
     hsv[1] *= factor
-    print(tuple(hsv))
     new = rgb_to_hex(*colorsys.hsv_to_rgb(*tuple(hsv)))
     return new
 
@@ -170,6 +169,10 @@ def apply_basic_format(format):
     format.set_border(1)
 
 
+def class_text(class_num):
+    return f'{class_num}분반'
+
+
 class Table:
     # gets data in raw_to_str output format
     # gets links in string separated by comma
@@ -273,7 +276,7 @@ class Table:
         table.set_row(0, 20)
         if self.include_aa:
             if self.use_link:
-                table.set_row(1, 60)
+                table.set_row(1, 80)
                 table.set_row(2, 20)
                 table.merge_range(1, 0, 2, 0, '')
                 table.merge_range(1, 1, 2, 1, '')
@@ -284,7 +287,7 @@ class Table:
                 table.merge_range(1, 2, 1, 2+len(days)-1, '')
         for i in range(1, len(self.period_row_list())):
             if self.use_link:
-                table.set_row(self.period_row(i), 60)
+                table.set_row(self.period_row(i), 80)
                 table.set_row(self.period_row(i)+1, 20)
                 table.merge_range(self.period_row(i), 0, self.period_row(i)+1, 0, '')
                 table.merge_range(self.period_row(i), 1, self.period_row(i)+1, 1, '')
@@ -312,8 +315,8 @@ class Table:
             table.write(1, 0, ugettext(aa_time), table_format)
             aa_data_row = len(self.lec)+2
             table.write_formula(1, 2,
-                                period_formula([f'데이터!A{aa_data_row}', f'데이터!D{aa_data_row}',
-                                                f'데이터!B{aa_data_row}']),
+                                period_formula([f'데이터!A{aa_data_row}', f'데이터!C{aa_data_row}',
+                                                f'데이터!D{aa_data_row}', f'데이터!B{aa_data_row}']),
                                 cell_format=aa_period_format, value=aa_name)
             if self.use_link:
                 table.write_formula(2, 2, link_formula(link_cells(aa_data_row, len(self.link))),
@@ -328,8 +331,9 @@ class Table:
         for i in range(len(self.lec)):
             for j in range(len(self.lec[i].time)):
                 table.write_formula(self.period_row(self.lec[i].time[j][1]), self.lec[i].time[j][0]+2,
-                                    period_formula([f'데이터!A{i+2}', f'데이터!D{i+2}', f'데이터!B{i+2}']),
-                                    cell_format=period_format[i], value=f'{self.lec[i].name}\r\n{self.lec[i].teacher}')
+                                    period_formula([f'데이터!A{i+2}', f'데이터!C{i+2}', f'데이터!D{i+2}', f'데이터!B{i+2}']),
+                                    cell_format=period_format[i],
+                                    value=f'{self.lec[i].name}\r\n{class_text(self.lec[i].class_num)}\r\n{self.lec[i].teacher}')
                 if self.use_link:
                     table.write_formula(self.period_row(self.lec[i].time[j][1])+1, self.lec[i].time[j][0]+2,
                                         link_formula(link_cells(i+2, len(self.link))),
@@ -363,7 +367,7 @@ class Table:
                 data.write(0, LINK_START_COLUMN+i, ugettext(self.link[i]))
         for i in range(len(self.lec)):
             data.write(i+1, NAME_X, ugettext(self.lec[i].name))
-            data.write(i+1, CLASS_NUM_X, ugettext(self.lec[i].class_num))
+            data.write(i+1, CLASS_NUM_X, ugettext(class_text(self.lec[i].class_num)))
             data.write(i+1, TEACHER_X, ugettext(self.lec[i].teacher))
         if self.include_aa:
             data.write(len(self.lec)+1, NAME_X, ugettext(aa_name))
