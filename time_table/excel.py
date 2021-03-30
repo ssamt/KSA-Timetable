@@ -82,6 +82,7 @@ for i in range(1, len(class_time)):
     if has_meal(i):
         meal_row_no_link.append(row)
         row += 1
+example_text = ['교과명', '분반', '교원', '교실']
 
 
 # takes the raw string copied from https://students.ksa.hs.kr/
@@ -240,14 +241,15 @@ class Table:
         apply_basic_format(aa_period_format)
 
         # format for three cells in the example period
-        example_period_format = [workbook.add_format() for i in range(3)]
+        example_period_format = [workbook.add_format() for i in range(len(example_text))]
         for i in range(len(example_period_format)):
             apply_basic_format(example_period_format[i])
             example_period_format[i].set_bg_color(colors[0])
         example_period_format[0].set_bottom(0)
-        example_period_format[1].set_top(0)
-        example_period_format[1].set_bottom(0)
-        example_period_format[2].set_top(0)
+        for i in range(1, len(example_text)-1):
+            example_period_format[i].set_top(0)
+            example_period_format[i].set_bottom(0)
+        example_period_format[len(example_text)-1].set_top(0)
 
         if self.use_link:
             example_link_format = workbook.add_format()
@@ -341,7 +343,6 @@ class Table:
 
         # create 데이터 worksheet
         data = workbook.add_worksheet('데이터')
-        example_text = ['교과명', '교원', '교실']
         example_row = len(self.lec)+1  # row and column that the explanation begins
         if self.include_aa:
             example_row += 1
@@ -353,11 +354,11 @@ class Table:
         vcenter_format = workbook.add_format()
         vcenter_format.set_align('vcenter')
         if self.use_link:
-            for i in range(4):
-                data.set_row(example_row+i, 20)
+            for i in range(len(example_text)+1):
+                data.set_row(example_row+i, 80/len(example_text)+1)
         else:
-            for i in range(3):
-                data.set_row(example_row+i, 80/3)
+            for i in range(len(example_text)):
+                data.set_row(example_row+i, 80/len(example_text))
         data.write(0, NAME_X, ugettext('교과명'))
         data.write(0, CLASSROOM_X, ugettext('교실'))
         data.write(0, CLASS_NUM_X, ugettext('분반'))
@@ -371,18 +372,18 @@ class Table:
             data.write(i+1, TEACHER_X, ugettext(self.lec[i].teacher))
         if self.include_aa:
             data.write(len(self.lec)+1, NAME_X, ugettext(aa_name))
-        for i in range(3):
+        for i in range(len(example_text)):
             data.write(example_row+i, example_column, ugettext(example_text[i]), example_period_format[i])
         data.write(example_row, example_column+1, ugettext('이 워크시트의 데이터로 시간표가 만들어짐'), vcenter_format)
-        data.write(example_row+2, example_column+1, ugettext('<- 왼쪽 표에 교실을 입력하면 자동으로 생성됨'), vcenter_format)
+        data.write(example_row+3, example_column+1, ugettext('<- 왼쪽 표에 교실을 입력하면 자동으로 생성됨'), vcenter_format)
         if self.use_link:
-            data.write(example_row+3, example_column, ugettext('Link'), example_link_format)
-            data.write(example_row+3, example_column+1, ugettext(f'<- {", ".join(self.link)} 밑에 링크를 입력하면 생성됨'),
+            data.write(example_row+len(example_text), example_column, ugettext('Link'), example_link_format)
+            data.write(example_row+len(example_text), example_column+1, ugettext(f'<- {", ".join(self.link)} 밑에 링크를 입력하면 생성됨'),
                        vcenter_format)
         if self.use_link:
-            start_row = example_row+4
+            start_row = example_row+len(example_text)+1
         else:
-            start_row = example_row+3
+            start_row = example_row+len(example_text)
         data.write(start_row, example_column+1, ugettext('https://ksatimetable.herokuapp.com'))
         data.write(start_row+1, example_column+1, ugettext('버그, 문의사항 등은 20-017 김병권'))
         data.write(start_row+2, example_column+1, ugettext(f'key: {self.key}'))
